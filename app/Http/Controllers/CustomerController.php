@@ -15,7 +15,8 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $customers = Customer::all();
+
+        $customers = Customer::paginate(2);
         $cities = City::all();
         return view('customer.list',compact('customers','cities'));
     }
@@ -100,4 +101,61 @@ class CustomerController extends Controller
         $customers->delete();
         return redirect()->route('customers.index');
     }
+
+    public function filterByCity(Request $request)
+    {
+        $idCity = $request->input('city_id');
+        //kiem tra city co ton tai khong
+        $cityFilter = City::findOrFail($idCity);
+        //lay ra tat ca customer cua cityFiler
+        $customers = Customer::where('city_id', $cityFilter->id)->get();
+        $totalCustomerFilter = count($customers);
+        $cities = City::all();
+        return view('customers.list', compact('customers', 'cities', 'totalCustomerFilter', 'cityFilter'));
+    }
+    public function search(Request $request){
+        $keyword = $request->input('keyword');
+        if (!$keyword){
+            return redirect()->route('customers.index');
+        }
+        $customers = Customer::where('name','LIKE','%'.$keyword.'%')->paginate(5);
+        $cities= City::all();
+        return view('customer.list',compact('customers','cities'));
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
