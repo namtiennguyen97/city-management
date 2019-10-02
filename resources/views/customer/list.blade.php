@@ -2,6 +2,14 @@
 @section('title','Customers')
 @section('content')
     <h1>Customer List</h1>
+    <form action="{{route('customers.search')}}" method="get">
+        @csrf
+        <input type="text" placeholder="Search" name="keyword">
+        <input type="submit" value="Search">
+    </form>
+<!-- Start -->
+
+<!-- END  -->
     <table border="1">
         <thead>
         <tr>
@@ -28,4 +36,5 @@
     </table>
     <a href="{{route('customers.create')}}">Add new Customer</a>
     <a style="background-color: deepskyblue" href="{{route('cities.index')}}">Switch to Cinty Database(testing)</a>
-    @endsection
+    <a>{{ $customers->links() }} </a>
+@endsection
